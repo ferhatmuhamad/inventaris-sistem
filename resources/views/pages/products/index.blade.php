@@ -9,6 +9,7 @@
             {{ $message }}
         </div>
         @endif
+        <p>Tes</p>
         <div class="row">
             <div class="col-12">
                 <div class="card">
