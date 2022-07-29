@@ -15,7 +15,7 @@ class Month extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'nama_bulan', 'active'
+        'nama_bulan', 'active','user_name'
     ];
 
     protected $hidden = [];

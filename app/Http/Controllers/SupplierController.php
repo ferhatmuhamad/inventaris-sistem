@@ -74,10 +74,23 @@ class SupplierController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SupplierRequest $request)
+    public function store(Request $request)
     {
         if(Auth::user()->can('create-supplier')) {
-            $data = $request->all();
+            $request->validate([
+                'nama_supplier'     => 'required|max:255',
+                'alamat_supplier'   => 'required|max:255',
+                'email_supplier'    => 'required',
+                'telepon_supplier'  => 'required'
+            ]);
+            $data = [
+                'nama_supplier'     => $request->nama_supplier,
+                'alamat_supplier'   => $request->alamat_supplier,
+                'email_supplier'    => $request->email_supplier,
+                'telepon_supplier'  => $request->telepon_supplier,
+                'user_name'         => Auth::user()->nama
+            ];
+            // $data = $request->all();
 
             Supplier::create($data);
             return redirect()->route('suppliers')->with('success', 'Supplier Berhasil Ditambahkan');
@@ -126,7 +139,19 @@ class SupplierController extends Controller
     public function update(Request $request, $id)
     {
         if(Auth::user()->can('update-supplier')) {
-            $data = $request->all();
+            $request->validate([
+                'nama_supplier'     => 'required|max:255',
+                'alamat_supplier'   => 'required|max:255',
+                'email_supplier'    => 'required',
+                'telepon_supplier'  => 'required|max:255'
+            ]);
+            $data = [
+                'nama_supplier'     => $request->nama_supplier,
+                'alamat_supplier'   => $request->alamat_supplier,
+                'email_supplier'    => $request->email_supplier,
+                'telepon_supplier'  => $request->telepon_supplier,
+                'user_name'         => Auth::user()->nama
+            ];
 
             $item = Supplier::findOrFail($id);
             $item->update($data);

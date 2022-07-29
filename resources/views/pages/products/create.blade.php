@@ -82,6 +82,7 @@
                                         type="number"
                                         name="stock_min"
                                         value="{{ old('stock_min') }}"
+                                        min="0"
                                         class="form-control @error('stock_min') is-invalid @enderror">
                                         @error('stock_min') <div class="text-muted">{{ $message }}</div> @enderror
                                 </div>

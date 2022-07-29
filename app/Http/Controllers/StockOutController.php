@@ -185,7 +185,8 @@ class StockOutController extends Controller
                             'id_customer'   => $request->input('id_customer'),
                             'id_warehouse'  => $wh->warehouse->id,
                             'id_periode'    => $this->periode->id,
-                            'id_month'      => $this->month->id
+                            'id_month'      => $this->month->id,
+                            'user_name'     => Auth::user()->nama
                         ];
                     } else {
                         $charges[] = [
@@ -200,7 +201,8 @@ class StockOutController extends Controller
                             'id_customer'   => $request->input('id_customer'),
                             'id_warehouse'  => $wh->warehouse->id,
                             'id_periode'    => $this->periode->id,
-                            'id_month'      => $this->month->id
+                            'id_month'      => $this->month->id,
+                            'user_name'     => Auth::user()->nama
                         ];
                     }
                 }
@@ -273,6 +275,7 @@ class StockOutController extends Controller
                     'stock'         => $request->input('stock'),
                     'status_bill'   => $request->input('status_bill'),
                     'bill'          => $request->input('bill'),
+                    'user_name'     => Auth::user()->nama
                 ];
                 // dd($array_update);
                 if ($request->status_bill == 'S') {

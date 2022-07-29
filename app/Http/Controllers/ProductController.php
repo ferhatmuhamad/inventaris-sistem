@@ -140,6 +140,7 @@ class ProductController extends Controller
                 'harga_jual'    => $request->harga_jual,
                 'harga_beli'    => $request->harga_beli,
                 'photo'         => $request->photo,
+                'user_name'     => Auth::user()->nama
             ];
 
             $timeInsert = time();
@@ -259,6 +260,7 @@ class ProductController extends Controller
                 'harga_jual'    => $request->harga_jual,
                 'harga_beli'    => $request->harga_beli,
                 'photo'         => $request->photo,
+                'user_name'     => Auth::user()->nama
             ];
 
             $removehttp = $this->remove_http($request->oldImage);

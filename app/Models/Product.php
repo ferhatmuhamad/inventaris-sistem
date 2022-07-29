@@ -14,7 +14,7 @@ class Product extends Model
     protected $table = 'product';
 
     protected $fillable = [
-        'kode', 'id_kategori', 'nama_produk', 'spesifikasi', 'stock_min', 'stock', 'id_supplier', 'letak', 'barang_masuk', 'harga_jual', 'harga_beli', 'photo', 'kodeqr'
+        'kode', 'id_kategori', 'nama_produk', 'spesifikasi', 'stock_min', 'stock', 'id_supplier', 'letak', 'barang_masuk', 'harga_jual', 'harga_beli', 'photo', 'kodeqr','user_name'
     ];
 
     protected $hidden = [];

@@ -20,7 +20,7 @@ class Transaction extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'id_product', 'date', 'stock', 'type', 'check', 'status_bill', 'bill', 'id_customer', 'id_supplier', 'id_warehouse', 'id_periode', 'id_month'
+        'id_product', 'date', 'stock', 'type', 'check', 'status_bill', 'bill', 'id_customer', 'id_supplier', 'id_warehouse', 'id_periode', 'id_month','user_name'
     ];
 
     protected $hidden = [];

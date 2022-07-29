@@ -76,7 +76,17 @@ class WarehouseController extends Controller
     public function store(Request $request)
     {
         if(Auth::user()->can('create-warehouse')) {
-            $data = $request->all();
+            $request->validate([
+                'nama_gudang'   => 'required|max:256',
+                'alamat_gudang'   => 'required|max:256',
+            ]);
+
+            $data = [
+                'nama_gudang'   => $request->nama_gudang,
+                'alamat_gudang' => $request->alamat_gudang,
+                'user_name'     => Auth::user()->nama
+            ];
+            // $data = $request->all();
 
             Warehouse::create($data);
             return redirect()->route('warehouses')->with('success', 'Gudang Berhasil Ditambahkan');
@@ -125,7 +135,16 @@ class WarehouseController extends Controller
     public function update(Request $request, $id)
     {
         if(Auth::user()->can('update-warehouse')) {
-            $data = $request->all();
+            $request->validate([
+                'nama_gudang'   => 'required|max:255',
+                'alamat_gudang'   => 'required|max:255',
+                'stock_min'     => 'required|integer',
+            ]);
+            $data = [
+                'nama_gudang' => $request->nama_gudang,
+                'alamat_gudang' => $request->alamat_gudang,
+                'user_name' => Auth::user()->nama
+            ];
 
             $item = Warehouse::findOrFail($id);
             $item->update($data);

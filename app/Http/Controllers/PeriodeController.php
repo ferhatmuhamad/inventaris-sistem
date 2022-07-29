@@ -100,6 +100,7 @@ class PeriodeController extends Controller
             $data               = new Periode;
             $data->nama_periode = $request->input('nama_periode');
             $data->active       = 'Y';
+            $data->user_name    = Auth::user()->nama;
             $data->save();
 
             return redirect()->route('periode')->with('success', 'Periode Berhasil Ditambahkan');

@@ -14,7 +14,7 @@ class Warehouse extends Model
     protected $table = 'warehouse';
 
     protected $fillable = [
-        'nama_gudang', 'alamat_gudang'
+        'nama_gudang', 'alamat_gudang','user_name'
     ];
 
     protected $hidden = [];

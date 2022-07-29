@@ -175,6 +175,7 @@ class StockOpController extends Controller
             $item->id_warehouse = $request->input('id_warehouse');
             $item->id_periode   = $this->periode->id;
             $item->id_month     = $this->month->id;
+            $item->user_name    = Auth::user()->nama;
             $item->save();
 
             return redirect(route('stockopname'))->with('success', 'Stock Opname Berhasil Ditambahkan');
@@ -228,7 +229,8 @@ class StockOpController extends Controller
             if ($idx != null) {
                 $array_update = [
                     'stock'         => $request->input('stock'),
-                    'id_warehouse'  => $request->input('id_warehouse')
+                    'id_warehouse'  => $request->input('id_warehouse'),
+                    'user_name'     => Auth::user()->nama
                 ];
                 $idx->update($array_update);
             }

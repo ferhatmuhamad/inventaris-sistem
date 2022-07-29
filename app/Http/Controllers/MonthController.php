@@ -101,9 +101,10 @@ class MonthController extends Controller
             }
 
             $data               = new Month();
-            $data->nama_bulan = $request->input('nama_bulan');
-            $data->id_periode = $this->periode->id;
+            $data->nama_bulan   = $request->input('nama_bulan');
+            $data->id_periode   = $this->periode->id;
             $data->active       = 'Y';
+            $data->user_name    = Auth::user()->nama;
             $data->save();
 
             return redirect()->route('month')->with('success', 'Periode Bulan Berhasil Ditambahkan');

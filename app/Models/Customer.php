@@ -14,7 +14,7 @@ class Customer extends Model
     protected $table = 'customer';
 
     protected $fillable = [
-        'nama_customer', 'alamat_customer', 'email_customer', 'telepon_customer'
+        'nama_customer', 'alamat_customer', 'email_customer', 'telepon_customer','user_name'
     ];
 
     protected $hidden = [];

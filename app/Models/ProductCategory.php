@@ -14,7 +14,7 @@ class ProductCategory extends Model
     protected $table = 'product_category';
 
     protected $fillable = [
-        'nama_kategori'
+        'nama_kategori','user_name'
     ];
 
     protected $hidden = [];

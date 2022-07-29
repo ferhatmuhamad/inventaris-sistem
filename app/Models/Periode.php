@@ -15,7 +15,7 @@ class Periode extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'nama_periode', 'active'
+        'nama_periode', 'active','user_name'
     ];
 
     protected $hidden = [];

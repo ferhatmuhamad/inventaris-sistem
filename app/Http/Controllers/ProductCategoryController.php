@@ -76,7 +76,14 @@ class ProductCategoryController extends Controller
     public function store(ProductCategoryRequest $request)
     {
         if(Auth::user()->can('create-product-category')) {
-            $data = $request->all();
+            $request->validate([
+                'nama_kategori' => 'required|max:255'
+            ]);
+            $data = [
+                'nama_kategori' => $request->nama_kategori,
+                'user_name'  => Auth::user()->nama
+            ];
+            // $data = $request->all();
 
             ProductCategory::create($data);
             return redirect()->route('productcategory')->with('success', 'Kategori Berhasil Ditambahkan');
@@ -125,7 +132,14 @@ class ProductCategoryController extends Controller
     public function update(ProductCategoryRequest $request, $id)
     {
         if(Auth::user()->can('update-product-category')) {
-            $data = $request->all();
+            $request->validate([
+                'nama_kategori' => 'required|max:255'
+            ]);
+            $data = [
+                'nama_kategori' => $request->nama_kategori,
+                'user_name'  => Auth::user()->nama
+            ];
+            // $data = $request->all();
 
             $item = ProductCategory::findOrFail($id);
             $item->update($data);

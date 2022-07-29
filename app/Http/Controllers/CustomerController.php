@@ -70,10 +70,21 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CustomerRequest $request)
+    public function store(Request $request)
     {
         if(Auth::user()->can('create-customer')) {
-            $data = $request->all();
+            $request->validate([
+                'nama_customer'     => 'required|max:255',
+                'alamat_customer'   => 'required|max:255',
+                'telepon_customer'  => 'required',
+            ]);
+            $data = [
+                'nama_customer' => $request->input('nama_customer'),
+                'alamat_customer' => $request->input('alamat_customer'),
+                'email_customer' => $request->input('email_customer'),
+                'telepon_customer' => $request->input('telepon_customer'),
+                'user_name' => Auth::user()->nama
+            ];
 
             Customer::create($data);
             return redirect()->route('customers')->with('success', 'Customer Berhasil Ditambahkan');
@@ -122,7 +133,19 @@ class CustomerController extends Controller
     public function update(CustomerRequest $request, $id)
     {
         if(Auth::user()->can('update-customer')) {
-            $data = $request->all();
+            $request->validate([
+                'nama_customer'     => 'required|max:255',
+                'alamat_customer'   => 'required|max:255',
+                'telepon_customer'  => 'required',
+            ]);
+            $data = [
+                'nama_customer' => $request->input('nama_customer'),
+                'alamat_customer' => $request->input('alamat_customer'),
+                'email_customer' => $request->input('email_customer'),
+                'telepon_customer' => $request->input('telepon_customer'),
+                'user_name'        => Auth::user()->nama
+            ];
+            // $data = $request->all();
 
             $item = Customer::findOrFail($id);
             $item->update($data);

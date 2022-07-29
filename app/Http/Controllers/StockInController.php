@@ -181,7 +181,8 @@ class StockInController extends Controller
                     'id_customer'   => 0,
                     'id_warehouse'  => $wh->warehouse->id,
                     'id_periode'    => $this->periode->id,
-                    'id_month'      => $this->month->id
+                    'id_month'      => $this->month->id,
+                    'user_name'     => Auth::user()->nama
                 ];
             }
 
@@ -239,6 +240,7 @@ class StockInController extends Controller
                     'date'          => $request->input('date'),
                     'stock'         => $request->input('stock'),
                     'check'         => $request->input('check'),
+                    'user_name'     => Auth::user()->nama
                 ];
                 // dd($array_update);
                 $idx->update($array_update);
