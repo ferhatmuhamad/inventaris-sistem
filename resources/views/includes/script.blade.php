@@ -38,8 +38,17 @@
 <!-- Sparkline demo data  -->
 <script src="{{asset("/assets/js/demo/sparkline-demo.js")}}"></script>
 
+{{-- DataTables Yajra --}}
+<script src="{{asset("/assets/js/jquery.dataTables.min.js")}}"></script>
+<script src="{{asset("/assets/js/dataTables.bootstrap4.min.js")}}"></script>
+
+<script src="{{asset('/assets/lib/datatables.net-dt/js/dataTables.dataTables.min.js')}}"></script>
+<script src="{{asset('/assets/lib/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset('/assets/lib/datatables.net-responsive-dt/js/responsive.dataTables.min.js')}}"></script>
+
 {{-- CKEDITOR --}}
-<script src="https://cdn.ckeditor.com/ckeditor5/33.0.0/classic/ckeditor.js"></script>
+<script src="{{asset('/assets/js/ckeditor.js')}}"></script>
+
 <script>
     ClassicEditor
             .create( document.querySelector( '.ckeditor' ) )
@@ -231,7 +240,7 @@
 
 {{-- DETAIL MODAL --}}
 
-<div class="modal" id="mymodal" tabindex="-1" role="dialog">
+<div class="modal fade bd-example-modal-lg" id="mymodal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #f3f3f3">

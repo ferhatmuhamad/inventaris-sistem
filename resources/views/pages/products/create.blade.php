@@ -1,5 +1,9 @@
 @extends('layouts.default')
 
+@section('style-custom')
+<link rel="stylesheet" href="{{asset("https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css")}}">
+@endsection
+
 @section('content')
     <div class="wrapper wrapper-content">
         <div class="row">
@@ -34,12 +38,17 @@
                                 <label class="col-sm-2 col-form-label">Kategori Produk</label>
                                 <div class="col-sm-10">
                                     <select name="id_kategori"
-                                    class="form-control @error('products_id') is-invalid @enderror">
-                                    @foreach ($productcategory as $pcategory)
-                                        <option value="{{ $pcategory->id }}">{{ $pcategory->nama_kategori }}</option>
-                                    @endforeach
-                                </select>
-                            @error('id_kategoru') <div class="text-muted">{{ $message }}</div> @enderror
+                                        class="form-control @error('products_id') is-invalid @enderror" data-live-search="true" required>
+                                        @if ($data['category']->count() == 0)
+                                            <option value="">Belum Ada Supplier</option>
+                                        @else
+                                        <option value="">-- Pilih Kategori --</option>
+                                        @foreach ($data['category'] as $category)
+                                            <option value="{{ $category->id }}">{{ $category->nama_kategori }}</option>
+                                        @endforeach
+                                        @endif
+                                    </select>
+                                    @error('id_kategori') <div class="text-muted">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -67,14 +76,32 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group row">
-                                <label for="stok" class="col-sm-2 col-form-label">Stok Produk</label>
+                                <label for="stock_min" class="col-sm-2 col-form-label">Stock Minimal</label>
                                 <div class="col-sm-10">
                                     <input
                                         type="number"
-                                        name="stok"
-                                        value="{{ old('stok') }}"
-                                        class="form-control @error('stok') is-invalid @enderror">
-                                        @error('stok') <div class="text-muted">{{ $message }}</div> @enderror
+                                        name="stock_min"
+                                        value="{{ old('stock_min') }}"
+                                        class="form-control @error('stock_min') is-invalid @enderror">
+                                        @error('stock_min') <div class="text-muted">{{ $message }}</div> @enderror
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group row">
+                                <label for="supplier" class="col-sm-2 col-form-label">Pilih Supplier</label>
+                                <div class="col-sm-10">
+                                    <select name="id_supplier"
+                                        class="form-control @error('products_id') is-invalid @enderror" data-live-search="true" required>
+                                        @if ($data['supplier']->count() == 0)
+                                            <option value="">Belum Ada Supplier</option>
+                                        @else
+                                        <option value="">-- Pilih Supplier --</option>
+                                        @foreach ($data['supplier'] as $supplier)
+                                        <option value="{{ $supplier->id }}">{{ $supplier->nama_supplier }}</option>
+                                        @endforeach
+                                        @endif
+                                    </select>
+                                    @error('id_supplier') <div class="text-muted">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -87,18 +114,6 @@
                                         value="{{ old('letak') }}"
                                         class="form-control @error('letak') is-invalid @enderror">
                                         @error('letak') <div class="text-muted">{{ $message }}</div> @enderror
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group row">
-                                <label for="supplier" class="col-sm-2 col-form-label">Supplier Produk</label>
-                                <div class="col-sm-10">
-                                    <input
-                                        type="text"
-                                        name="supplier"
-                                        value="{{ old('supplier') }}"
-                                        class="form-control @error('supplier') is-invalid @enderror">
-                                        @error('supplier') <div class="text-muted">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -170,6 +185,16 @@
     </div>
 @endsection
 
+@section('script-custom')
+{{-- SELECT LIVE SEARCH --}}
+<script src="{{asset("https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js")}}"></script>
+
+<script>
+    $(document).ready(function() {
+        $('select').selectpicker();
+    })
+</script>
+
 <script>
     function previewImage()
     {
@@ -186,3 +211,4 @@
         }
     }
 </script>
+@endsection

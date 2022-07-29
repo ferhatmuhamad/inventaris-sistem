@@ -49,6 +49,14 @@ class ProductController extends Controller
 
     // }
 
+    public function data($id = null)
+    {
+        $model      = new Product;
+        $data       = Product::findOrFail($id);
+
+        return response()->json($data);
+    }
+
     public function getQRCodeByCode($code) {
         $data = Product::with('productcategory')->where('kode', $code)->first();
 

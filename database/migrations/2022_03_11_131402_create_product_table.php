@@ -19,7 +19,8 @@ class CreateProductTable extends Migration
             $table->integer('id_kategori');
             $table->string('nama_produk');
             $table->longText('spesifikasi');
-            $table->integer('stok');
+            $table->integer('stock_min');
+            $table->integer('stock');
             $table->string('letak');
             $table->string('supplier');
             $table->date('barang_masuk');

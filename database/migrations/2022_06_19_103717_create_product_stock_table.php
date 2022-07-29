@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CraeteTransactionTable extends Migration
+class CreateProductStockTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CraeteTransactionTable extends Migration
      */
     public function up()
     {
-        Schema::create('transaction', function (Blueprint $table) {
+        Schema::create('product_stock', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama_pembeli');
-            $table->string('telepon');
-            $table->string('alamat');
-            $table->date('tanggal');
-            $table->integer('total_transaksi');
-            $table->string('status_transaksi');
             $table->integer('id_product');
+            $table->integer('stock');
+            $table->integer('total_stock');
+            $table->date('tanggal_masuk');
 
             $table->softDeletes();
             $table->timestamps();
@@ -35,6 +32,6 @@ class CraeteTransactionTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('product_stock');
     }
 }

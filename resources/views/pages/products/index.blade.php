@@ -9,12 +9,11 @@
             {{ $message }}
         </div>
         @endif
-        <p>Tes</p>
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="box-title">Daftar Produk</h4>
+                        <h2 class="box-title"><strong>Daftar Produk</strong></h2>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
@@ -22,21 +21,11 @@
                               <div class="col-lg-12">
                                 <div class="ibox">
                                     <div class="ibox-content">
-
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    {{-- <input type="text" id="filter" name="cari_produk" value="" placeholder="Cari Produk" class="form-control form-control-sm m-b-xs mt-2 mb-2"> --}}
-                                                    <input type="text" style="padding: 20px;" class="form-control form-control-sm m-b-xs" id="filter" placeholder="Cari">
-                                                </div>
-                                            </div>
-                                        </div>
-
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <div class="table-responsive">
                                                     {{-- <table class="table table-striped"> --}}
-                                                    <table ref="myFooTable" id="table-content" class="mt-4 footable table table-hover table-stripped" data-page-size="10" data-filter=#filter>
+                                                    <table id="table-content" class="mt-4 table table-hover table-stripped data-table">
                                                         <thead>
                                                             <tr>
                                                                 <th>NO</th>
@@ -51,7 +40,7 @@
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        {{-- <tbody>
                                                             @php($i=1)
                                                             @forelse ($items as $item)
                                                                 <tr>
@@ -61,8 +50,8 @@
                                                                     <td>{{ $kodeBlade[0] }}</td>
                                                                     <td>{{ $item->nama_produk }}</td>
                                                                     <td>{{ $item->productcategory->nama_kategori }}</td>
-                                                                    <td>{{ $item->stok }}</td>
-                                                                    <td>{{ $item->harga_jual }}</td>
+                                                                    <td>{{ $item->stock }}</td>
+                                                                    <td>{{ number_format($item->harga_jual) }}</td>
                                                                     <td>{{ $item->barang_masuk }}</td>
                                                                     <td><img style="width: 50px" src="{{ $item->kodeqr }}" alt=""></td>
                                                                     <td>
@@ -101,7 +90,7 @@
                                                                     </td>
                                                                 </tr>
                                                             @endforelse
-                                                        </tbody>
+                                                        </tbody> --}}
                                                     </table>
                                                 </div>
                                             </div>
@@ -120,16 +109,128 @@
 @endsection
 
 @section('script-custom')
-    <script src="{{asset('/assets/js/footable.js')}}"></script>
-    {{-- <script src="{{asset('/assets/js/footable.js')}}"></script> --}}
 
     <script>
-        $(document).ready(function() {
+        $(function () {
+            var table = $('.data-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url : "{{ url('products/data') }}",
+                    // data: function (d) {
+                    //     d.Fiscal_Year_Id = $('#filter_tahun').val();
+                    // }
+                },
+                autoWidth: false,
+                // order: [[1, 'desc']],
+                columnDefs: [{
+                        targets: 'no-sort',
+                        orderable: false
+                    },
 
-            $('.footable').footable();
-            $('.footable2').footable();
+                    {
+                        "targets": 0, // your case first column
+                        "className": "text-center",
+                        "width": "5%"
+                    },
+                    {
+                        "targets": 3, // your case first column
+                        "className": "text-center",
+                        "width": "20%"
+                    },
 
+                    ],
+                columns: [
+                    {data: 'DT_RowIndex',  name: 'DT_RowIndex', orderable: false, searchable: false },
+                    {data: 'imageData', name: 'imageData', orderable: false, searchable: false},
+                    {data: 'kodeBlade', name: 'kodeBlade'},
+                    {data: 'nama_produk', name: 'nama_produk'},
+                    {data: 'productCategory', name: 'productCategory'},
+                    {data: 'stock_min', name: 'stock_min'},
+                    {data: 'hargaJual', name: 'hargaJual'},
+                    {data: 'barang_masuk', name: 'barang_masuk'},
+                    {data: 'kodeQr', name: 'kodeQr', orderable: false, searchable: false},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ],
+                language: {
+                    searchPlaceholder: 'Cari...',
+                    sSearch: '',
+                    lengthMenu: '_MENU_ items/page',
+                },
+            });
 
-        });
+            $(document).on('click', '#delete-btn', function(event) {
+                // var id_product = $(this).data('id');
+                const id_product = $(event.currentTarget).data('id');
+                if (confirm('Apa anda yakin?') == true) {
+                    $(document).ajaxStop(function(){
+                        window.location.reload();
+                    });
+                    $.ajax({
+                        type:'DELETE',
+                        dataType:'json',
+                        url:"{{ url('products/destroy')}}"+'/'+id_product,
+                        data:{"_token": "{{ csrf_token() }}"},
+                        success:function(data){
+                            location.reload();
+                        }
+                    });
+                }
+                // var url = '<?= route("products.destroy", '.id_product.') ?>';
+            });
+
+            // $(document).on('click', '#delete-btn', function(event) {
+            //     // var id_product = $(this).data('id');
+            //     const id_product = $(event.currentTarget).data('id');
+            //     // confirm('Apa anda yakin?');
+            //     swal({
+            //         title: 'Delete!',
+            //         html: 'Anda ingin menghapus data ini?',
+            //         showCancelButton: true,
+            //         closeOnConfirm: false,
+            //         showLoaderOnConfirm: true,
+            //         confirmButtonColor: '#5cb85c',
+            //         cancelButtonColor: '#d33',
+            //         cancelButtonText: 'Tidak',
+            //         confirmButtonText: 'Ya'
+            //     },
+            //     function(){
+            //         $.ajax({
+            //             type:'DELETE',
+            //             dataType:'json',
+            //             url:"{{ url('products/destroy')}}"+'/'+id_product,
+            //             data:{"_token": "{{ csrf_token() }}"},
+            //             success:function(response){
+            //                 swal({
+            //                     title: 'Delete!',
+            //                     text: 'Produk Telah Dihapus',
+            //                     type: 'success',
+            //                     timer: 2000,
+            //                 });
+            //                 // table.draw();
+            //                 table.DataTable().ajax.reload(null, false);
+            //             },
+            //             error: function(error) {
+            //                 swal({
+            //                     title: 'Error!',
+            //                     text: error.responseJSON.message,
+            //                     type: 'error',
+            //                     timer: 2000,
+            //                 });
+            //             },
+            //         });
+            //     });
+            // });
+
+            $('#filter').click(function(){
+                table.draw();
+            });
+
+            $('.dataTables_length select').select2({ minimumResultsForSearch: Infinity });
+
+            $('.data-search').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+        })
     </script>
 @endsection

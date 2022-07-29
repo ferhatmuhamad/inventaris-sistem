@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\ProductCategory;
 use App\Http\Requests\ProductCategoryRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Yajra\Datatables\Datatables;
 
 class ProductCategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,11 +21,36 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        $items = ProductCategory::all();
+        if(Auth::user()->can('read-product-category')) {
+            return view('pages.productcategory.index');
+        } else {
+            return redirect('forbidden');
+        }
+    }
 
-        return view('pages.productcategory.index')->with([
-            'items' => $items
-        ]);
+    public function read()
+    {
+        if(Auth::user()->can('read-product-category')) {
+            $data = ProductCategory::all();
+
+            return Datatables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function ($data){
+                $btn = '<div style="text-align:center;"><div class="btn-group">';
+                if (Auth::user()->can(['update-product-category','delete-product-category'])) {
+                    $btn = '<a id="edit-btn" href="'.url('productcategory/edit/'.$data->id).'" data-url="'.url('productcategory/edit/'.$data->id).'" class="btn btn-primary btn-sm" title="'.__('general.edit').'" data-toggle="tooltip" data-placement="left"><i class="fa fa-pencil"></i></a> ';
+                    $btn .= '<a id="delete-btn" href="javascript:void(0);" data-toggle="tooltip" data-id="'.$data->id.'" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>';
+                } else {
+                    $btn = '<a id="none-btn" href="/forbidden" class="btn btn-danger btn-sm" title="'.__('general.none').'" data-toggle="tooltip" data-placement="left"></i>Tidak Tersedia</a> ';
+                }
+                $btn .= '</div></div>';
+                return $btn;
+            })
+            ->escapeColumns([])
+            ->make(true);
+        } else {
+            return redirect('forbidden');
+        }
     }
 
     /**
@@ -29,7 +60,11 @@ class ProductCategoryController extends Controller
      */
     public function create()
     {
-        return view('pages.productcategory.create');
+        if(Auth::user()->can('create-product-category')) {
+            return view('pages.productcategory.create');
+        } else {
+            return redirect('forbidden');
+        }
     }
 
     /**
@@ -40,10 +75,14 @@ class ProductCategoryController extends Controller
      */
     public function store(ProductCategoryRequest $request)
     {
-        $data = $request->all();
+        if(Auth::user()->can('create-product-category')) {
+            $data = $request->all();
 
-        ProductCategory::create($data);
-        return redirect()->route('productcategory')->with('success', 'Kategori Berhasil Ditambahkan');
+            ProductCategory::create($data);
+            return redirect()->route('productcategory')->with('success', 'Kategori Berhasil Ditambahkan');
+        } else {
+            return redirect('forbidden');
+        }
     }
 
     /**
@@ -65,11 +104,15 @@ class ProductCategoryController extends Controller
      */
     public function edit($id)
     {
-        $item = ProductCategory::findOrFail($id);
+        if(Auth::user()->can('update-product-category')) {
+            $item = ProductCategory::findOrFail($id);
 
-        return view('pages.productcategory.edit')->with([
-            'item' => $item,
-        ]);
+            return view('pages.productcategory.edit')->with([
+                'item' => $item,
+            ]);
+        } else {
+            return redirect('forbidden');
+        }
     }
 
     /**
@@ -81,12 +124,16 @@ class ProductCategoryController extends Controller
      */
     public function update(ProductCategoryRequest $request, $id)
     {
-        $data = $request->all();
+        if(Auth::user()->can('update-product-category')) {
+            $data = $request->all();
 
-        $item = ProductCategory::findOrFail($id);
-        $item->update($data);
+            $item = ProductCategory::findOrFail($id);
+            $item->update($data);
 
-        return redirect()->route('productcategory')->with('success', 'Kategori Berhasil Diperbarui');
+            return redirect()->route('productcategory')->with('success', 'Kategori Berhasil Diperbarui');
+        } else {
+            return redirect('forbidden');
+        }
     }
 
     /**
@@ -97,9 +144,13 @@ class ProductCategoryController extends Controller
      */
     public function destroy($id)
     {
-        $item = ProductCategory::findOrFail($id);
-        $item->delete();
+        if(Auth::user()->can('delete-product-category')) {
+            $item = ProductCategory::findOrFail($id);
+            $item->delete();
 
-        return redirect()->route('productcategory')->with('success', 'Kategori Berhasil Dihapus');
+            return redirect()->route('productcategory')->with('success', 'Kategori Berhasil Dihapus');
+        } else {
+            return redirect('forbidden');
+        }
     }
 }

@@ -12,7 +12,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="box-title">Daftar Kategori Produk</h4>
+                        <h2 class="box-title"><strong>Daftar Produk Kategori</strong></h2>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
@@ -21,18 +21,9 @@
                                 <div class="ibox">
                                     <div class="ibox-content">
 
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    {{-- <input type="text" id="product_name" name="product_name" value="" placeholder="Cari Kategori" class="form-control form-control-sm m-b-xs mt-2 mb-2"> --}}
-                                                    <input type="text" style="padding: 20px;" class="form-control form-control-sm m-b-xs" id="filter" placeholder="Cari">
-                                                </div>
-                                            </div>
-                                        </div>
-
                                         <div class="table-responsive">
                                             {{-- <table class="table table-striped"> --}}
-                                            <table ref="myFooTable" id="table-content" class="mt-4 footable table table-hover table-stripped" data-page-size="10" data-filter=#filter>
+                                            <table id="table-content" class="mt-4 table table-hover table-stripped data-table" data-page-size="10">
                                                 <thead>
                                                     <tr>
                                                         <th>NO</th>
@@ -40,7 +31,7 @@
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                {{-- <tbody>
                                                     @forelse ($items as $item)
                                                         <tr>
                                                             <td>{{ $item->id }}</td>
@@ -69,7 +60,7 @@
                                                             </td>
                                                         </tr>
                                                     @endforelse
-                                                </tbody>
+                                                </tbody> --}}
                                             </table>
                                         </div>
 
@@ -86,16 +77,77 @@
 @endsection
 
 @section('script-custom')
-    <script src="{{asset('/assets/js/footable.js')}}"></script>
-    {{-- <script src="{{asset('/assets/js/footable.js')}}"></script> --}}
-
     <script>
-        $(document).ready(function() {
+        $(function () {
+            var table = $('.data-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url : "{{ url('productcategory/data') }}",
+                    // data: function (d) {
+                    //     d.Fiscal_Year_Id = $('#filter_tahun').val();
+                    // }
+                },
+                autoWidth: false,
+                // order: [[1, 'desc']],
+                columnDefs: [{
+                        targets: 'no-sort',
+                        orderable: false
+                    },
 
-            $('.footable').footable();
-            $('.footable2').footable();
+                    {
+                        "targets": 1, // your case first column
+                        "className": "text-center",
+                        "width": "50%"
+                    },
+                    {
+                        "targets": 2, // your case first column
+                        "className": "text-center",
+                        "width": "50%"
+                    },
 
+                    ],
+                columns: [
+                    {data: 'DT_RowIndex',  name: 'DT_RowIndex', orderable: false, searchable: false },
+                    {data: 'nama_kategori', name: 'nama_kategori'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ],
+                language: {
+                    searchPlaceholder: 'Cari...',
+                    sSearch: '',
+                    lengthMenu: '_MENU_ items/page',
+                }
+            });
 
-        });
+            $(document).on('click', '#delete-btn', function(event) {
+                // var id_product = $(this).data('id');
+                const id_product = $(event.currentTarget).data('id');
+                if (confirm('Apa anda yakin?') == true) {
+                    $(document).ajaxStop(function(){
+                        window.location.reload();
+                    });
+                    $.ajax({
+                        type:'DELETE',
+                        dataType:'json',
+                        url:"{{ url('productcategory/destroy')}}"+'/'+id_product,
+                        data:{"_token": "{{ csrf_token() }}"},
+                        success:function(data){
+                            location.reload();
+                        }
+                    });
+                }
+                // var url = '<?= route("products.destroy", '.id_product.') ?>';
+            });
+
+            $('#filter').click(function(){
+                table.draw();
+            });
+
+            $('.dataTables_length select').select2({ minimumResultsForSearch: Infinity });
+
+            $('.data-search').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+        })
     </script>
 @endsection

@@ -14,7 +14,7 @@ class Product extends Model
     protected $table = 'product';
 
     protected $fillable = [
-        'kode', 'id_kategori', 'nama_produk', 'spesifikasi', 'stok', 'letak', 'supplier', 'barang_masuk', 'harga_jual', 'harga_beli', 'photo', 'kodeqr'
+        'kode', 'id_kategori', 'nama_produk', 'spesifikasi', 'stock_min', 'stock', 'id_supplier', 'letak', 'barang_masuk', 'harga_jual', 'harga_beli', 'photo', 'kodeqr'
     ];
 
     protected $hidden = [];
@@ -22,6 +22,16 @@ class Product extends Model
     public function productcategory()
     {
         return $this->belongsTo(ProductCategory::class, 'id_kategori', 'id');
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'id_supplier', 'id');
+    }
+
+    public function stockin()
+    {
+        return $this->belongsTo(Transaction::class, 'id_product', 'id');
     }
 
     public function getPhotoAttribute($value)

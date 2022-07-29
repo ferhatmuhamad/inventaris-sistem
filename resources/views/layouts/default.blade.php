@@ -11,6 +11,7 @@
     {{-- STYLE --}}
     @stack('before-style')
     @include('includes.style')
+    @yield('style-custom')
     @stack('after-style')
 
 </head>
@@ -30,6 +31,7 @@
 
         {{-- CONTENT --}}
 
+        @include('sweetalert::alert')
         @yield('content')
 
     {{-- SCRIPT --}}
